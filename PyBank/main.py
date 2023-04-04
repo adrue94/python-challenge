@@ -5,7 +5,7 @@ import numpy
 
 # Storing path of CSV as variable(?) / object(?)
 bankCSV = os.path.join("Resources", "budget_data.csv")
-output_Path = os.path.join("Analysis", "Analysis.txt")
+output_Path = os.path.join("Analysis", "Bank_Analysis.txt")
 
 # Initializing lists, variables, etc.
 date = []
@@ -15,9 +15,9 @@ pl_Diff = []
 # Opening CSV file with 'csvfile', add encoding to avoid illegal byte error
 with open(bankCSV, encoding='utf-8') as csvfile:
     
-    # Storing data from CSV as object
+    # Storing data from CSV as object, skips header
     bankDataReader = csv.reader(csvfile)
-    next(bankDataReader)
+    bankDataHeader = next(bankDataReader)
     # Populating date and pl_List with respective rows; making sure pl_List is held as int
     for row in bankDataReader:
         date.append(row[0])
@@ -34,14 +34,15 @@ with open(bankCSV, encoding='utf-8') as csvfile:
     indexMax = numpy.argmax(pl_Diff) + 1
     gDecrease = min(pl_Diff)
     indexMin = numpy.argmin(pl_Diff) + 1
-    # As numpy.diff finds the difference of two adjacent values, it will return (n - 1) values from a list
+    # As 'numpy.diff()' finds the difference of two adjacent values, it will return (n - 1) values from a list
     # We add (+ 1) to reflect the month after the change occurred
 
 print('Financial Analysis')
 print('----------------------------')
 print(f'Total Months: {len(date)}')
 print(f'Total: ${pl_Total}')
-print(f'Average Change: ${pl_Avg}')
+# Adding ':.2f' to format number to two decimal places
+print(f'Average Change: ${pl_Avg:.2f}')
 print(f'Greatest Increase in Profits: {date[indexMax]} (${gIncrease})')
 print(f'Greatest Decrease in Profits: {date[indexMin]} (${gDecrease})')
 
@@ -51,6 +52,6 @@ with open(output_Path, 'w') as csvfile:
     csvwriter.writerow(['----------------------------'])
     csvwriter.writerow([f'Total Months: {len(date)}'])
     csvwriter.writerow([f'Total: ${pl_Total}'])
-    csvwriter.writerow([f'Average Change: ${pl_Avg}'])
+    csvwriter.writerow([f'Average Change: ${pl_Avg:.2f}'])
     csvwriter.writerow([f'Greatest Increase in Profits: {date[indexMax]} (${gIncrease})'])
     csvwriter.writerow([f'Greatest Decrease in Profits: {date[indexMin]} (${gDecrease})'])
